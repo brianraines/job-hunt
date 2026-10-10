@@ -1,0 +1,4 @@
+node_modules/
+.DS_Store
+# Private job-hunt data if the skill is ever run inside this repository.
+docs/job_hunt/
