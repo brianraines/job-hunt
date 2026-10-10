@@ -12,7 +12,7 @@ The skill supports the search; it never acts on the operator's behalf. It does n
 
 - Repository: `brianraines/job-hunt`, public, MIT license. Content adapted from other MIT-licensed skills is credited in `NOTICE` with its original copyright lines.
 - Install: `npx skills add brianraines/job-hunt` (project) or with `-g` (all projects). The installer places the skill in `.agents/skills/job-hunt` for Codex and other agents and links it into `.claude/skills/job-hunt` for Claude Code.
-- Invocation: Claude Code `/job-hunt <subcommand>`; Codex `$job-hunt <subcommand>` or a matching natural-language request. This document writes `/job-hunt`; behavior is identical in both agents.
+- Invocation: Claude Code `/job-hunt <subcommand>`; Codex `$job-hunt <subcommand>` or a matching natural-language request. This document writes `/job-hunt`; behavior is identical in both agents. Verified October 10, 2026 with Claude Code and Codex CLI 0.160.0: both discover the skill in a project's `.agents/skills/job-hunt` (Claude Code through the `.claude/skills` link) and invoke it as described.
 - Listing on [skills.sh](https://skills.sh) is automatic from installer telemetry; there is no submission step.
 - Until v1.0.0 the skill's frontmatter sets `metadata.internal: true`, which hides it from normal discovery. It is installed explicitly with `INSTALL_INTERNAL_SKILLS=1` during development.
 
@@ -58,7 +58,7 @@ Each release passes the acceptance checks for its scope and updates `CHANGELOG.m
 
 ### Location and safeguards
 
-- Data lives in `docs/job_hunt/` under the root of the project the skill is run from.
+- Data lives in `docs/job_hunt/` under the root of the project the skill is run from (`git rev-parse --show-toplevel`). Outside a Git repository the skill stops, because it cannot verify that the folder is ignored.
 - The skill writes there only if Git ignores the folder (`git check-ignore docs/job_hunt/` succeeds). If not, it stops, explains why, and offers to add `docs/job_hunt/` to the project's `.gitignore`; it edits `.gitignore` only after the operator approves.
 - The skill also creates `docs/job_hunt/.gitignore` containing `*`, so the data stays ignored if the project rule is lost.
 - The skill never stages, commits or uploads anything under `docs/job_hunt/`, and never copies its contents into tracked files.

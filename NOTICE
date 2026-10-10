@@ -1,0 +1,12 @@
+job-hunt
+Copyright (c) 2026 Brian Raines. Licensed under the MIT License (see LICENSE).
+
+Third-party material
+--------------------
+
+None yet. Version 0.2 and later will adapt small portions of the following
+MIT-licensed works, which will be credited here with their original copyright
+notices when added:
+
+- github/awesome-copilot, skills/technical-job-search (commit 82701c24b994)
+- squerne/open-career-skills, .claude/skills/ats-detective (commit daaf01f832e5)
