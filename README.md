@@ -4,7 +4,7 @@ An agent skill for a focused, private job search with Claude Code or Codex. It i
 
 It never acts for you: it does not apply to jobs, fill forms, send messages or connection requests, sign in to websites, or edit your resume.
 
-> **Status: 0.4, in development.** All commands are implemented. Version 1.0 follows once the acceptance checks in [docs/SPEC.md](docs/SPEC.md) pass in both Claude Code and Codex. The skill is marked internal until then, so installing it requires `INSTALL_INTERNAL_SKILLS=1`.
+> **Status: 0.5, in development.** All commands are implemented. Version 1.0 follows once the acceptance checks in [docs/SPEC.md](docs/SPEC.md) pass in both Claude Code and Codex. The skill is marked internal until then, so installing it requires `INSTALL_INTERNAL_SKILLS=1`.
 
 ## Install
 
@@ -25,12 +25,14 @@ Run it from the root of a Git project where you want to keep your private job-se
 | `/job-hunt eval {company}` | `$job-hunt eval {company}` | Evaluate a company against your files and add or update it in your ledger |
 | `/job-hunt search` | `$job-hunt search` | Search your ledger companies and the web for matching openings, and write a report |
 | `/job-hunt connect {company}` | `$job-hunt connect {company}` | Find recruiters and hiring managers at a company from public search results |
+| `/job-hunt score companies` | `$job-hunt score companies` | Set how much each company criterion matters, then rank your ledger companies |
+| `/job-hunt score jobs` | `$job-hunt score jobs` | Set how much each role and benefits criterion matters, then rank the latest search's postings |
 
 The first run interviews you for anything missing. The skill reads only public pages: it never signs in to any site and never automates LinkedIn.
 
 ### Codex web access
 
-`eval`, `search` and `connect` need live web search and network access. If Codex does not have them, start it with:
+`eval`, `search` and `connect` need live web search (`score` does not) and network access. If Codex does not have them, start it with:
 
 ```sh
 codex --search -c sandbox_workspace_write.network_access=true
@@ -57,6 +59,8 @@ Companies on your blacklist are never searched for and never named in any query 
 | `CONNECTIONS.md` | People you might contact; the `Status` column is yours |
 | `evals/` | One report per company evaluation |
 | `search/` | Dated search reports, and `seen.csv` so a posting is reported again only when it changes |
+| `SCORING.md` | Your weights for each company and job criterion, 100 points per matrix |
+| `scores/` | Ranked company and job score reports |
 
 ## Development
 

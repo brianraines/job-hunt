@@ -21,7 +21,7 @@ Directive files: IDEAL_COMPANIES.md (reviewed YYYY-MM-DD), IDEAL_ROLES.md (...),
 | Must-have | Result | Evidence |
 | --- | --- | --- |
 
-<!-- Result: met, unmet or unknown. Evidence: a short fact with its source link. -->
+<!-- One row per Must-have in IDEAL_COMPANIES.md, copied word for word (the score depends on it). Result: met, unmet or unknown. Evidence: a short fact with its source link. -->
 
 ## Nice-to-haves
 
@@ -34,6 +34,10 @@ Directive files: IDEAL_COMPANIES.md (reviewed YYYY-MM-DD), IDEAL_ROLES.md (...),
 | --- | --- | --- |
 
 <!-- Result for a dealbreaker: found, not found or unknown. List soft warning signs found too. -->
+
+## Score
+
+<!-- Added after the report is written, as references/score.md describes: "Score 53/100 (30% of weight unknown)", or "not scored: {reason}". -->
 
 ## Reviews
 

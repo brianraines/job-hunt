@@ -8,6 +8,7 @@ Opportunities: {n} (Strong {n}, Possible {n}, Stretch {n}). Excluded: {n}. Black
 
 - Posting: {URL opened in this run}
 - Fit: Strong | Possible | Stretch
+- Score: {Score 53/100 (30% of weight unknown), or "not scored: {reason}"}
 - Company: Strong fit (eval YYYY-MM-DD, {report path}) | not evaluated — run `eval {Company}`
 - Location and arrangement: {as posted}
 - Compensation: {as posted, or "not stated"}
@@ -20,7 +21,14 @@ Opportunities: {n} (Strong {n}, Possible {n}, Stretch {n}). Excluded: {n}. Black
 
 **Gaps or warning signs.** {Unmet or unknown Must-haves, soft warning signs, or "None found".}
 
-<!-- Repeat for each opportunity, best first. A changed posting notes what changed since it was last reported. -->
+**Scorecard.**
+
+| Criterion | Source | Type | Result |
+| --- | --- | --- | --- |
+
+<!-- One row per Must-have and Nice-to-have in IDEAL_ROLES.md and IDEAL_BENEFITS.md, each met, unmet or unknown. -->
+
+<!-- Repeat for each opportunity: Strong, then Possible, then Stretch; highest score first within each. A changed posting notes what changed since it was last reported. -->
 
 ## Excluded
 

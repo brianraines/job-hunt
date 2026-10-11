@@ -11,5 +11,6 @@ Report, briefly:
 5. The number of eval reports in `evals/`, and the date of the latest.
 6. The latest report in `search/`: its date, opportunity count and excluded count. If there is none, say so.
 7. The number of rows in `CONNECTIONS.md`, by `Status`, if the file exists.
+8. Scoring: for each matrix in `SCORING.md`, whether it is set and in sync with the directive files (see `references/score.md`), and the date of the latest `scores/` report of each kind. If the file is missing or a matrix is not set or out of date, say so.
 
-End with one suggested next step, for example `interview` for an incomplete or stale file, `eval {company}` to grow a short ledger, `search` when no search has run in the last 7 days, or `connect {company}` for a company with a Strong posting and no contacts.
+End with one suggested next step, for example `interview` for an incomplete or stale file, `eval {company}` to grow a short ledger, `search` when no search has run in the last 7 days, `connect {company}` for a company with a Strong posting and no contacts, or `score companies` or `score jobs` when a matrix is missing or out of date.

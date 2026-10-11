@@ -1,6 +1,6 @@
 ---
 name: job-hunt
-description: Private, operator-driven job search. Use when the operator invokes job-hunt (/job-hunt in Claude Code, $job-hunt in Codex) with no subcommand or with interview, eval, search or connect, or asks to update their job-search profile, ideal roles, ideal companies, benefits, red flags or blacklist. Keeps private directive files in docs/job_hunt/ and never applies, messages or signs in on the operator's behalf.
+description: Private, operator-driven job search. Use when the operator invokes job-hunt (/job-hunt in Claude Code, $job-hunt in Codex) with no subcommand or with interview, eval, search, connect or score, or asks to update their job-search profile, scoring weights, ideal roles, ideal companies, benefits, red flags or blacklist. Keeps private directive files in docs/job_hunt/ and never applies, messages or signs in on the operator's behalf.
 metadata:
   internal: true
 ---
@@ -36,8 +36,10 @@ Run these steps before every subcommand, in order:
 | `eval {company}` | Evaluate a company and add or update it in the ledger: `references/eval.md`. |
 | `search` | Find matching open postings and write a report: `references/search.md`. |
 | `connect {company}` | Record recruiters and hiring managers worth contacting: `references/connect.md`. |
+| `score companies` | Review the company scoring weights, then rank ledger companies: `references/score.md`. |
+| `score jobs` | Review the job scoring weights, then rank the latest search's postings: `references/score.md`. |
 | anything else | List the subcommands above with one line each. |
 
-For `eval` and `connect` without a company, ask which company before preflight steps 3 and 4.
+For `eval` and `connect` without a company, ask which company before preflight steps 3 and 4. For `score` without `companies` or `jobs`, ask which.
 
 Read only the reference files the current subcommand needs. Each procedure names the other references it uses.

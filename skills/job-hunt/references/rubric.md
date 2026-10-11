@@ -2,6 +2,8 @@
 
 Used by `references/eval.md` for companies and `references/search.md` for postings. Ratings use only the operator's lists in the directive files: Must-haves, Nice-to-haves, and the dealbreakers and thresholds in `RED_FLAGS.md`. Never add criteria of your own.
 
+Scores from `references/score.md` rank items within a verdict or rating; they never change one.
+
 ## Checking one item
 
 Mark each Must-have, Nice-to-have and dealbreaker as one of:

@@ -24,7 +24,7 @@ The operator's job-search data is private: salary expectations, target and black
 ## Writing rules
 
 - Never stage, commit, push, upload or deploy anything under `DATA`, and never copy its contents into tracked files, commit messages or pull requests.
-- Before overwriting `CONNECTIONS.md` or any directive file, copy the current version to `DATA/.history/{name}-{timestamp}.md`, where `{name}` is the file name without `.md`. Create `.history/` if needed. Eval and search reports are always new files; never overwrite one.
+- Before overwriting `CONNECTIONS.md`, `SCORING.md` or any directive file, copy the current version to `DATA/.history/{name}-{timestamp}.md`, where `{name}` is the file name without `.md`. Create `.history/` if needed. Eval, search and score reports are always new files; never overwrite one.
 - Never delete files in `DATA`.
 - Timestamps use the format `yyyyMMdd-HHmmss` in the time zone from `PROFILE.md`, or the system's local time zone before that file exists. For example: `TZ=America/Chicago date +%Y%m%d-%H%M%S`. Dates use `YYYY-MM-DD`.
 - File names never contain colons.
