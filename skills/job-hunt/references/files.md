@@ -40,6 +40,24 @@ Complete when it has:
 
 The ledger may be short. Fewer than 20 `active` companies is a warning, not a gap: report it, and offer to add companies during the interview.
 
+Ledger columns, one row per company:
+
+| Column | Contents |
+| --- | --- |
+| Company | Name |
+| Why it fits | One line tied to the company profile |
+| Job board URL | The company's careers page or tracking-system board, never an aggregator |
+| Board type | Tracking-system name from `references/ats-hosts.md`, or "careers page" |
+| Last verified | Date the board URL last loaded and listed jobs, or "not verified" |
+| Glassdoor | Public overall rating and review count with link, or "not checked" |
+| Levels.fyi | Link and median total compensation at the operator's target level, or "not checked" |
+| Blind | Link to the public company page, or "not checked" |
+| Reviews checked | Date the three review columns were last refreshed |
+| Last eval | Verdict and the path of the latest eval report |
+| Status | `active` or `paused`, with an optional reason |
+
+Interview, `eval` and `search` write the ledger. Search only refreshes `Last verified`, the three review columns and `Reviews checked` of existing rows; it never adds, removes or reorders rows or changes any other column.
+
 ## IDEAL_BENEFITS.md
 
 Template: `templates/IDEAL_BENEFITS.md`. Compensation and benefits expectations.
@@ -69,3 +87,16 @@ Rules:
 - Add a company only after the operator explicitly approves that company.
 - Never send a blacklisted company's name in a search query or URL, never fetch its job board, never propose it for the ledger, and refuse to evaluate or research it.
 - Remove an entry only when the operator asks.
+
+## Other data files
+
+These are not directive files and are never part of the completeness check.
+
+| Path in `DATA` | Template | Written by |
+| --- | --- | --- |
+| `CONNECTIONS.md` | `templates/CONNECTIONS.md` | `connect`; the `Status` column belongs to the operator |
+| `evals/{company-slug}-{yyyyMMdd-HHmmss}.md` | `templates/EVAL.md` | `eval` |
+| `search/{yyyy-mm-dd}/SEARCH-{yyyyMMdd-HHmmss}.md` | `templates/SEARCH.md` | `search` |
+| `search/seen.csv` | `templates/seen.csv` | `search` |
+
+A company slug is the company name in lowercase ASCII with each run of other characters replaced by one hyphen, and no leading or trailing hyphen: "Example Co." becomes `example-co`.

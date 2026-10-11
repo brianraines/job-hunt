@@ -1,6 +1,6 @@
 # `job-hunt` skill specification
 
-Status: approved design, October 10, 2026. Implementation has not started. This document is the contract the `job-hunt` agent skill is built and reviewed against. Design decisions were settled in a structured review; each is recorded here as a requirement.
+Status: approved design, October 10, 2026. Versions 0.1 to 0.4 are implemented; 1.0 awaits the acceptance checks. This document is the contract the `job-hunt` agent skill is built and reviewed against. Design decisions were settled in a structured review; each is recorded here as a requirement.
 
 ## Purpose
 
@@ -282,6 +282,23 @@ Each query and source with its result count.
 
 `CONNECTIONS.md` columns: Company, Name, Title, Role type, Profile URL, Found, Confidence, Status, Notes.
 
+## Clarifications
+
+Settled while implementing 0.2 to 0.4, October 11, 2026, including fixes from an independent review:
+
+- **Order of checks.** For `eval` and `connect`, the blacklist check runs before the web-access check, and the web-access check uses a neutral query that names no company and no operator data.
+- **Interview ledger step.** Evaluating companies sends queries and needs the red flags and minimum pay, so the interview builds the ledger only after `BLACKLIST.md` is confirmed and `RED_FLAGS.md` and `IDEAL_BENEFITS.md` are complete. Companies the operator names earlier are noted and evaluated then. The ledger step runs only for `/job-hunt interview` or when `IDEAL_COMPANIES.md` itself is incomplete; other commands only warn about a short ledger. Each operator-named company is evaluated and its report saved; a Not a fit is explained and added only if the operator still wants it, as `active` or `paused`. Proposed candidates run only the gathering and decision steps of eval; their reports and ledger rows are written only when kept.
+- **Item results.** Each Must-have, Nice-to-have and dealbreaker is met (found), unmet (not found) or unknown. "All Must-haves met" requires every one to be met. "Most" means at least one is met and more are met than unmet, leaving unknown items out of the count; reports state how many were unknown. Evidence must come from a page or endpoint opened in the run; a search snippet counts as unknown.
+- **Company compensation dealbreakers** count only when a source states a figure at the operator's target level: a Levels.fyi median at that level (total compensation, compared only with a total-compensation minimum) or posted ranges on every matching open role.
+- **Posting compensation.** A stated figure is below the minimum only when the top of its range is below it. When a posting does not say whether a figure is base or total, it is treated as base.
+- **`PROFILE.md` Must-haves** (such as work authorization or location) are reported as gaps on every posting that misses them; they change the rating only when `RED_FLAGS.md` lists them as dealbreakers.
+- **Search order.** Ratings are final after the news check, and only then compared with `seen.csv`, so a second run with unchanged postings reports nothing new. Postings that match no rating are not listed but are recorded in `seen.csv`.
+- **Posting URLs and the fetch cap.** A posting's record from a tracking system's public endpoint counts as opening it, and the report links the posting URL that record gives. The only URLs the skill builds are the public listing endpoints with a probed slug, and the same API's one-posting endpoint with an `id` its listing returned. Each posting assessed counts once toward the cap of 300, and postings not yet in `seen.csv` are opened first.
+- **Aggregator results in search** (LinkedIn, Indeed, Built In and similar) are leads only. The employer's own copy is found and opened; when it cannot be found, the lead is listed under "Sources not checked". linkedin.com pages are never fetched.
+- **Boards without a public listing endpoint** (Workday, iCIMS and others) are read from the careers page; when it lists jobs only through JavaScript the agent cannot run, the board is listed under "Sources not checked". A stale board that cannot be re-verified keeps its old date and is listed there too. Search refreshes only `Last verified`, the review columns and `Reviews checked`; a moved board is not read in that run; it is listed under "Sources not checked" with an `eval` suggestion.
+- **Blacklist names.** Matching ignores case, punctuation and legal suffixes, and treats other names given in an entry's Reason ("also known as …") as the same company. A known brand or subsidiary of a blacklisted company is treated as blacklisted; `eval`, `connect` and the interview tell the operator, and `search` drops it without stopping and lists it only in the chat summary. The interview asks for other names when adding an entry. The report's "Blacklisted companies dropped" counts distinct companies.
+- **Connect** reads names and titles from search-result titles and snippets, never from opened LinkedIn pages; a company's own public pages may be opened. People whose result names the company and a matching role are recorded, as `confirmed` when the result shows the role is current and `unverified` otherwise; people shown to have left are skipped.
+
 ## Adapted material
 
 Rather than installing companion skills, `job-hunt` adapts two small pieces of MIT-licensed material into its own reference files and credits them in `NOTICE`:
@@ -297,6 +314,7 @@ A GitHub Actions workflow with read-only permissions runs on every push and pull
 
 - Every `SKILL.md` has valid frontmatter with `name` and `description`.
 - Every file referenced from `SKILL.md` and the reference files exists.
+- Every file in `references/` is reachable from `SKILL.md` through a chain of references.
 - A personal-data check fails if the repository contains any value from a deny-list held in repository secrets (the maintainer's phone number, personal email, current employer, home city and similar), or any path under `docs/job_hunt/`.
 
 The acceptance checks below are run manually in both agents before each release.

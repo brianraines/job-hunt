@@ -28,7 +28,7 @@ Last reviewed: YYYY-MM-DD
 
 ## Ledger
 
-<!-- Companies to target. Add only with the operator's approval. Status: active or paused. Review columns and Last eval are filled by eval (version 0.2). -->
+<!-- Companies to target. Add only with the operator's approval. Status: active or paused. Review columns and Last eval are filled by eval; search refreshes Last verified and the review columns. -->
 
 | Company | Why it fits | Job board URL | Board type | Last verified | Glassdoor | Levels.fyi | Blind | Reviews checked | Last eval | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |

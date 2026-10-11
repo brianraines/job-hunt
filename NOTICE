@@ -4,9 +4,65 @@ Copyright (c) 2026 Brian Raines. Licensed under the MIT License (see LICENSE).
 Third-party material
 --------------------
 
-None yet. Version 0.2 and later will adapt small portions of the following
-MIT-licensed works, which will be credited here with their original copyright
-notices when added:
+job-hunt adapts small portions of the following MIT-licensed works. Most of
+the adapted text was rewritten for this skill; the job board host table in
+ats-hosts.md is reproduced largely as published. The original notices are kept
+below as their licenses require.
 
-- github/awesome-copilot, skills/technical-job-search (commit 82701c24b994)
-- squerne/open-career-skills, .claude/skills/ats-detective (commit daaf01f832e5)
+1. technical-job-search, from github/awesome-copilot
+   https://github.com/github/awesome-copilot/tree/82701c24b994/skills/technical-job-search
+   Commit 82701c24b994.
+   Adapted in skills/job-hunt/references/rubric.md: the split of a job
+   description into required and preferred items, and the posting warning
+   signs.
+
+   MIT License
+
+   Copyright GitHub, Inc.
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in all
+   copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+   SOFTWARE.
+
+2. ats-detective, from squerne/open-career-skills
+   https://github.com/squerne/open-career-skills/tree/daaf01f832e5/.claude/skills/ats-detective
+   Commit daaf01f832e5.
+   Adapted in skills/job-hunt/references/ats-hosts.md: the job board host to
+   tracking system table, the public listing endpoints, and the checks for
+   confirming a board.
+
+   MIT License
+
+   Copyright (c) 2026 JobMentis (Sylvain Querné)
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in all
+   copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+   SOFTWARE.
