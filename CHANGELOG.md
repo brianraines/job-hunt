@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.0 — unreleased
+
+- `score companies` and `score jobs`: review a weight matrix with the operator (one row per company, or role and benefits, Must-have and Nice-to-have; weights sum to 100; first proposal 70/30), then rank ledger companies from their latest evals or the latest search's opportunities from their scorecards. Reports go to `scores/`; `score companies` also updates the ledger's `Last eval`. No web access needed.
+- `eval` scores the company after writing its report and records the score in the report and the ledger; `search` adds a scorecard to each opportunity, scores them once the write-ups are finished, and orders by score within each rating. Scores never change a verdict or rating. A score is the weight of criteria confirmed met, out of 100; unknown criteria earn nothing and are reported as a share of weight.
+- New reference `score.md` and template `SCORING.md`; status reports whether each matrix is set and in sync.
+
 ## 0.4.0 — unreleased
 
 - `connect {company}`: records up to 10 recruiters and hiring managers per run from public search results only, with the spec's fields, duplicate handling and an operator-owned `Status`; refuses blacklisted companies before any query. New template `CONNECTIONS.md`.

@@ -4,7 +4,7 @@
 
 The interview also uses this procedure (see `references/interview.md`). When it does, run only steps 1 to 4 and return the findings: the interview decides when to write the report and the ledger row, using steps 5 and 6.
 
-Uses: `references/privacy.md`, `references/rubric.md`, `references/ats-hosts.md`, `references/review-sites.md`, and the template `templates/EVAL.md`.
+Uses: `references/privacy.md`, `references/rubric.md`, `references/ats-hosts.md`, `references/review-sites.md`, `references/score.md`, and the template `templates/EVAL.md`.
 
 ## 1. Check the blacklist first
 
@@ -28,7 +28,7 @@ Search and fetch only public pages. Record the link for every fact you use.
 
 ## 4. Decide
 
-Mark each company Must-have and Nice-to-have from `IDEAL_COMPANIES.md` as met, unmet or unknown, and each dealbreaker from `RED_FLAGS.md` as found, not found or unknown. Apply the company verdict in `references/rubric.md`: **Strong fit**, **Possible fit** or **Not a fit**.
+Mark each company Must-have and Nice-to-have from `IDEAL_COMPANIES.md`, copied word for word, as met, unmet or unknown, and each dealbreaker from `RED_FLAGS.md` as found, not found or unknown. Apply the company verdict in `references/rubric.md`: **Strong fit**, **Possible fit** or **Not a fit**.
 
 Note soft warning signs from `RED_FLAGS.md` too; they never change the verdict.
 
@@ -36,15 +36,17 @@ Note soft warning signs from `RED_FLAGS.md` too; they never change the verdict.
 
 Write `DATA/evals/{company-slug}-{yyyyMMdd-HHmmss}.md` from `templates/EVAL.md` (slug rules in `references/files.md`, timestamp rules in `references/privacy.md`). Create `evals/` if needed. Fill every section; write "none found" or "unknown" rather than leaving one empty.
 
+Then score the company: once the report is written, score it with the company matrix in `references/score.md`, using the Must-have and Nice-to-have results in the report, and fill the report's Score section with the score or the reason it was not scored. The score never changes the verdict.
+
 ## 6. Update the ledger
 
 Copy `IDEAL_COMPANIES.md` to `.history/` before changing it (see `references/privacy.md`).
 
-- **New company, Strong or Possible fit:** add a row with status `active`, a one-line "why it fits" tied to the profile, the board URL and type, `Last verified`, the three review columns, `Reviews checked` set to today, and `Last eval` set to the verdict and report path.
+- **New company, Strong or Possible fit:** add a row with status `active`, a one-line "why it fits" tied to the profile, the board URL and type, `Last verified`, the three review columns, `Reviews checked` set to today, and `Last eval` set to `{Verdict}, score {n}: {report path}`, or `{Verdict}: {report path}` when not scored.
 - **New company, Not a fit:** do not add it. Say why in chat.
-- **Company already in the ledger:** update its board, review, `Reviews checked` and `Last eval` columns. Leave `Why it fits` unless it no longer holds, and leave `Status` alone. If the verdict is Not a fit and the status is `active`, propose changing it to `paused` with the reason, and change it only after the operator agrees.
+- **Company already in the ledger:** update its board, review, `Reviews checked` and `Last eval` columns, writing `Last eval` as above. Leave `Why it fits` unless it no longer holds, and leave `Status` alone. If the verdict is Not a fit and the status is `active`, propose changing it to `paused` with the reason, and change it only after the operator agrees.
 - **Blacklist:** if a dealbreaker found is serious enough that the operator might never want this company searched, propose adding it to `BLACKLIST.md` with the reason. Add it only after explicit approval, following `references/files.md`.
 
 ## 7. Report in chat
 
-In a few lines: the verdict, the Must-haves that decided it, any dealbreaker or warning sign found, the number of matching open roles, the review values or "not checked", what changed in the ledger, and the report path.
+In a few lines: the verdict, the score or why it was not scored, the Must-haves that decided it, any dealbreaker or warning sign found, the number of matching open roles, the review values or "not checked", what changed in the ledger, and the report path.

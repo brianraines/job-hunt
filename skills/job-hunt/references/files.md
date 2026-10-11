@@ -53,10 +53,10 @@ Ledger columns, one row per company:
 | Levels.fyi | Link and median total compensation at the operator's target level, or "not checked" |
 | Blind | Link to the public company page, or "not checked" |
 | Reviews checked | Date the three review columns were last refreshed |
-| Last eval | Verdict and the path of the latest eval report |
+| Last eval | Verdict, score when scored, and the path of the latest eval report: `{Verdict}, score {n}: {path}` |
 | Status | `active` or `paused`, with an optional reason |
 
-Interview, `eval` and `search` write the ledger. Search only refreshes `Last verified`, the three review columns and `Reviews checked` of existing rows; it never adds, removes or reorders rows or changes any other column.
+Interview, `eval`, `search` and `score companies` write the ledger. `score companies` changes only `Last eval`. Search only refreshes `Last verified`, the three review columns and `Reviews checked` of existing rows; it never adds, removes or reorders rows or changes any other column.
 
 ## IDEAL_BENEFITS.md
 
@@ -98,5 +98,8 @@ These are not directive files and are never part of the completeness check.
 | `evals/{company-slug}-{yyyyMMdd-HHmmss}.md` | `templates/EVAL.md` | `eval` |
 | `search/{yyyy-mm-dd}/SEARCH-{yyyyMMdd-HHmmss}.md` | `templates/SEARCH.md` | `search` |
 | `search/seen.csv` | `templates/seen.csv` | `search` |
+| `SCORING.md` | `templates/SCORING.md` | `score companies` and `score jobs` (see `references/score.md`) |
+| `scores/COMPANIES-{yyyyMMdd-HHmmss}.md` | none | `score companies` |
+| `scores/JOBS-{yyyyMMdd-HHmmss}.md` | none | `score jobs` |
 
 A company slug is the company name in lowercase ASCII with each run of other characters replaced by one hyphen, and no leading or trailing hyphen: "Example Co." becomes `example-co`.

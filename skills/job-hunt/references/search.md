@@ -2,7 +2,7 @@
 
 `search` finds open postings that match the directive files and writes a report. It never applies to anything and never adds companies to the ledger.
 
-Uses: `references/privacy.md`, `references/rubric.md`, `references/ats-hosts.md`, `references/review-sites.md`, and the templates `templates/SEARCH.md` and `templates/seen.csv`.
+Uses: `references/privacy.md`, `references/rubric.md`, `references/ats-hosts.md`, `references/review-sites.md`, `references/score.md`, and the templates `templates/SEARCH.md` and `templates/seen.csv`.
 
 ## 1. Prepare
 
@@ -21,7 +21,7 @@ Keep a running log of every query and source with its result count, including th
 For each `active` ledger company, in ledger order:
 
 1. Check it against `BLACKLIST.md`. A ledger company should never be blacklisted; if one is, skip it, count it as dropped, and tell the operator at the end without naming it in any query.
-2. If `Last verified` or `Reviews checked` is older than 90 days, "not verified" or empty, re-verify the board with `references/ats-hosts.md` and refresh the review columns with `references/review-sites.md`. Remember the new values for step 9. If the board cannot be re-verified, keep its old `Last verified` value, list it under "Sources not checked" with its link, and move on. If the board has moved to a new URL, keep the ledger's URL, do not read the new board in this run, list the new URL under "Sources not checked", and suggest `eval {company}`.
+2. If `Last verified` or `Reviews checked` is older than 90 days, "not verified" or empty, re-verify the board with `references/ats-hosts.md` and refresh the review columns with `references/review-sites.md`. Remember the new values for step 10. If the board cannot be re-verified, keep its old `Last verified` value, list it under "Sources not checked" with its link, and move on. If the board has moved to a new URL, keep the ledger's URL, do not read the new board in this run, list the new URL under "Sources not checked", and suggest `eval {company}`.
 3. List the board's open postings, preferring the public endpoint for its board type in `references/ats-hosts.md`. If the board cannot be read, add it to "Sources not checked" with its link and move on.
 4. Keep postings whose title matches the role filter and is not excluded.
 
@@ -81,13 +81,18 @@ For each reported Strong, Possible or Stretch posting:
 1. **Contacts:** list the people in `CONNECTIONS.md` at that company with their role type and status, or "none".
 2. **Executive summary:** two to four sentences tied to specific Must-haves and to facts from the resume sources. Never claim experience the resume sources do not state.
 3. **Gaps or warning signs:** unmet or unknown Must-haves, unmet `PROFILE.md` Must-haves, soft warning signs from `RED_FLAGS.md`, and the posting warning signs in `references/rubric.md`. Write "None found" if there are none.
+4. **Scorecard:** each Must-have and Nice-to-have in `IDEAL_ROLES.md` and `IDEAL_BENEFITS.md`, word for word, marked met, unmet or unknown with the same results used for the rating.
 
-## 9. Write
+## 9. Score
 
-1. Write the report from `templates/SEARCH.md`. Order opportunities Strong, then Possible, then Stretch; within each, ledger companies with a Strong fit first, then by most recent posting date. Show each directive file's `Last reviewed` date. Name no blacklisted company anywhere; show only the count dropped.
+When every write-up in step 8 is finished, score each reported opportunity from its scorecard with the job matrix in `references/score.md`. Record the score, or the reason it was not scored, on the opportunity. The score never changes a rating.
+
+## 10. Write
+
+1. Write the report from `templates/SEARCH.md`. Order opportunities Strong, then Possible, then Stretch; within each, by score from high to low, with unscored opportunities last; break ties with ledger companies with a Strong fit first, then by most recent posting date. Show each directive file's `Last reviewed` date. Name no blacklisted company anywhere; show only the count dropped.
 2. Write `search/seen.csv`.
 3. If step 2 refreshed any ledger rows, copy `IDEAL_COMPANIES.md` to `.history/` and update only `Last verified`, the three review columns and `Reviews checked` for those rows. Never add, remove or reorder rows, and never change any other column.
 
-## 10. Report in chat
+## 11. Report in chat
 
-In a few lines: the report path, the counts (opportunities by rating, excluded, blacklisted companies dropped, previously reported, postings opened and skipped by the cap), the top three opportunities with their links, sources not checked, ledger rows refreshed, and any `eval` suggestions.
+In a few lines: the report path, the counts (opportunities by rating, excluded, blacklisted companies dropped, previously reported, postings opened and skipped by the cap), the top three opportunities with their scores and links, whether scoring was skipped and why, sources not checked, ledger rows refreshed, and any `eval` suggestions.

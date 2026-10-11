@@ -1,6 +1,6 @@
 # `job-hunt` skill specification
 
-Status: approved design, October 10, 2026. Versions 0.1 to 0.4 are implemented; 1.0 awaits the acceptance checks. This document is the contract the `job-hunt` agent skill is built and reviewed against. Design decisions were settled in a structured review; each is recorded here as a requirement.
+Status: approved design, October 10, 2026; scoring added October 11, 2026. Versions 0.1 to 0.5 are implemented; 1.0 awaits the acceptance checks. This document is the contract the `job-hunt` agent skill is built and reviewed against. Design decisions were settled in a structured review; each is recorded here as a requirement.
 
 ## Purpose
 
@@ -26,6 +26,7 @@ skills/job-hunt/
     eval.md              Company evaluation procedure
     search.md            Search procedure
     connect.md           Connect procedure
+    score.md             Scoring matrices and the score commands
     rubric.md            Posting and company rating rules
     ats-hosts.md         Job board host to applicant tracking system table
     review-sites.md      Glassdoor, Levels.fyi and Blind rules
@@ -50,6 +51,7 @@ AGENTS.md                How to develop the skill
 | 0.2 | `eval`, and building the company ledger through it |
 | 0.3 | `search` |
 | 0.4 | `connect` |
+| 0.5 | Scoring: `score companies`, `score jobs`, and scores in `eval` and `search` |
 | 1.0 | All acceptance checks pass in Claude Code and Codex; remove `metadata.internal`; tag `v1.0.0` |
 
 Each release passes the acceptance checks for its scope and updates `CHANGELOG.md`.
@@ -80,6 +82,8 @@ Each release passes the acceptance checks for its scope and updates `CHANGELOG.m
 | `evals/{company-slug}-{yyyyMMdd-HHmmss}.md` | Markdown | `eval` |
 | `search/{yyyy-mm-dd}/SEARCH-{yyyyMMdd-HHmmss}.md` | Markdown | `search` |
 | `search/seen.csv` | CSV | `search` |
+| `SCORING.md` | Markdown | `score companies`, `score jobs` |
+| `scores/COMPANIES-{yyyyMMdd-HHmmss}.md`, `scores/JOBS-{yyyyMMdd-HHmmss}.md` | Markdown | `score companies`, `score jobs` |
 
 Times use the time zone in `PROFILE.md`. File names avoid colons, which macOS Finder rejects. SQLite was considered and rejected: binary files cannot be read or diffed by the operator, and the volume does not warrant a database.
 
@@ -116,7 +120,7 @@ Ledger table:
 | Levels.fyi | Link and median total compensation at the operator's target level, or "not checked" |
 | Blind | Link to the public company page, or "not checked" |
 | Reviews checked | Date review columns were last refreshed |
-| Last eval | Verdict and link to the eval report |
+| Last eval | Verdict, score when scored, and link to the eval report |
 | Status | `active` or `paused`, with an optional reason |
 
 Sufficiency: every profile section filled; Must-haves and Nice-to-haves. Fewer than 20 `active` companies is a warning shown by status and search, not a gap: the interview offers to add more until there are at least 20.
@@ -155,8 +159,10 @@ Effect of a blacklisted company:
 | `/job-hunt eval {company}` | Evaluate a company; add or update it in the ledger. |
 | `/job-hunt search` | Search for matching openings and write a report. |
 | `/job-hunt connect {company}` | Find recruiters and hiring managers at a company and add them to `CONNECTIONS.md`. |
+| `/job-hunt score companies` | Review the company weight matrix with the operator, then score and rank every ledger company from its latest eval. |
+| `/job-hunt score jobs` | Review the job weight matrix with the operator, then score and rank the opportunities in the latest search report. |
 
-Unknown subcommands list the commands. `eval` and `connect` ask for a company when none is given.
+Unknown subcommands list the commands. `eval` and `connect` ask for a company when none is given; `score` asks whether to score companies or jobs.
 
 ### Preflight (every command)
 
@@ -192,6 +198,7 @@ Goal: complete every directive file without asking for facts the operator's sour
   3. Most Must-haves met: **Possible fit**.
   4. Otherwise: **Not a fit**.
   Unknown information (for example a blocked review site) is neutral: it is reported as unknown and neither meets nor fails a Must-have.
+- Score: after the report is written, the company is scored with the company matrix (see Scoring) and the score is added to the report and the ledger's `Last eval`. The score never changes the verdict.
 - Output: a report at `evals/{company-slug}-{yyyyMMdd-HHmmss}.md` containing the verdict, each company Must-have and Nice-to-have marked met, unmet or unknown, red flags found, review results, news, matching open roles and a sources list; plus a short verdict in chat.
 - Ledger:
   - New company, Strong or Possible: add as `active` with the review columns, `Last verified`, `Reviews checked` and `Last eval`.
@@ -228,7 +235,8 @@ Rules:
 - `search/seen.csv` columns: `url,company,title,first_seen,last_seen,last_rating`. A posting already seen is reported again only if its rating or title changed; otherwise it counts as previously reported.
 - Record every query and source used, with result counts, including those that returned nothing.
 - Report salary only as posted. Cite only facts from the operator's resume sources; never claim unlisted experience.
-- Order opportunities best first. The report shows the last-reviewed date of each directive file.
+- Each reported opportunity carries a scorecard: every Must-have and Nice-to-have from `IDEAL_ROLES.md` and `IDEAL_BENEFITS.md` marked met, unmet or unknown. When the write-ups are finished, each opportunity is scored from its scorecard with the job matrix (see Scoring).
+- Order opportunities by rating, then by score within each rating. The report shows the last-reviewed date of each directive file.
 
 Report format:
 
@@ -243,6 +251,7 @@ Opportunities: 9. Excluded: 4. Blacklisted companies dropped: 1. Previously repo
 
 - Posting: https://...
 - Fit: Strong | Possible | Stretch
+- Score: 53/100 (30% of weight unknown), or "not scored: {reason}"
 - Company: Strong fit (eval 2026-10-01, link) | not evaluated — run /job-hunt eval Example Co
 - Location and arrangement: Remote (US)
 - Compensation: as posted, or "not stated"
@@ -268,6 +277,20 @@ Each with a ready-to-open link.
 
 Each query and source with its result count.
 ```
+
+## Scoring
+
+Scores rank companies and postings within their verdict or rating. They never change a verdict or rating; dealbreakers still decide Not a fit and Skip.
+
+- `SCORING.md` holds two matrices. The company matrix has one row per Must-have and Nice-to-have in `IDEAL_COMPANIES.md`; the job matrix has one row per Must-have and Nice-to-have in `IDEAL_ROLES.md` and `IDEAL_BENEFITS.md`. Criteria are copied word for word; weights are whole numbers that sum to 100 in each matrix.
+- `SCORING.md` is not a directive file: it is not part of the completeness check, and a missing or out-of-date matrix never triggers the interview. It is written only by the `score` commands, after the operator confirms the weights, with a `.history/` copy first.
+- First matrix: Must-haves share 70 points and Nice-to-haves 30, split evenly; if either list is empty the other gets 100. Later runs keep existing weights, add new criteria at 0 and drop removed ones, then ask the operator to confirm or adjust.
+- Score = the total weight of criteria confirmed met, out of 100. Unmet and unknown criteria earn nothing, so missing evidence never raises a score; the weight of unknown criteria is reported alongside as "% of weight unknown", and above 50% the score is marked low confidence. With every criterion unknown, the item is not scored. (A score rescaled over known criteria was rejected on October 11, 2026: with typical evals it gave almost every company 100 and ranked a company with a confirmed unmet criterion below companies with no evidence.)
+- Ties within a verdict or rating are broken by unknown weight, highest first.
+- `eval` and `search` score only when the needed matrix is set and matches the current directive lists; otherwise they record "not scored" with the reason and suggest the `score` command. They never edit `SCORING.md`.
+- `score companies` scores every ledger company from the results in its latest eval report, writes `scores/COMPANIES-{timestamp}.md` ranked by verdict then score, and updates only the ledger's `Last eval` column. A company whose eval predates the current criteria is listed as not scored.
+- `score jobs` scores the opportunities in the latest search report from their scorecards and writes `scores/JOBS-{timestamp}.md` ranked by rating then score. It never changes the search report or `seen.csv`.
+- The `score` commands send no queries and need no web access.
 
 ## Connect
 
@@ -332,6 +355,8 @@ The acceptance checks below are run manually in both agents before each release.
 9. `connect` adds at most 10 people with only the listed fields, skips duplicates, never changes an existing status, and refuses blacklisted companies.
 10. Without live web access, `eval`, `search` and `connect` stop with an explanation; in Codex the explanation includes the launch command.
 11. After any run, `git status` shows nothing under `docs/job_hunt/`.
+12. `score companies` with no `SCORING.md` proposes a 70/30 matrix that sums to 100, saves only after confirmation, ranks every ledger company with an eval, and updates only `Last eval`; after a Must-have is added to `IDEAL_COMPANIES.md`, it proposes the new row at weight 0, and `eval` records "not scored" until the matrix is confirmed again.
+13. `score jobs` ranks the latest search report's opportunities from their scorecards without changing the report or `seen.csv`; `search` and `eval` show scores and order by them within each rating, and a score never changes a verdict or rating.
 
 ## Non-goals
 
