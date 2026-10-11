@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.4.0 — unreleased
+
+- `connect {company}`: records up to 10 recruiters and hiring managers per run from public search results only, with the spec's fields, duplicate handling and an operator-owned `Status`; refuses blacklisted companies before any query. New template `CONNECTIONS.md`.
+- Status reports connections by status and suggests `connect` for companies with strong postings.
+
+## 0.3.0 — unreleased
+
+- `search`: reads active ledger boards through public tracking-system endpoints, re-verifies stale rows, runs keyword web searches, opens up to 300 matching postings, confirms each is open, flags eligibility blockers, rates postings with the rubric, checks news for strong and possible matches, cross-references connections, and writes a dated report. New templates `SEARCH.md` and `seen.csv`; previously reported postings are skipped unless their title or rating changes.
+- Privacy: public pages only, no LinkedIn automation, untrusted-content rule, and no private details in outgoing queries.
+
+## 0.2.0 — unreleased
+
+- `eval {company}`: refuses blacklisted companies without any outgoing query; finds and verifies the job board, checks Glassdoor, Levels.fyi and Blind without signing in, searches news for red-flag signals, lists matching open roles, applies the company verdict, writes a report and updates the ledger. New template `EVAL.md`.
+- Interview builds the ledger in a new step after the blacklist is confirmed and the red flags and benefits are complete: it evaluates named companies and proposes batches of about 10, each evaluated first; only kept companies are added. Blacklist entries can list other names ("also known as …").
+- New references: `rubric.md` (company and posting ratings), `ats-hosts.md` (job board hosts and public endpoints), `review-sites.md`.
+- `NOTICE` credits the adapted material from github/awesome-copilot and squerne/open-career-skills.
+- Repository check: every reference file must be reachable from `SKILL.md`.
+
 ## 0.1.0 — unreleased
 
 - Skill entry point with preflight and subcommand routing for Claude Code (`/job-hunt`) and Codex (`$job-hunt`).

@@ -59,10 +59,27 @@ export function checkFrontmatter(text, directoryName) {
 // Paths to bundled files, written as `references/x.md` or [text](templates/x.md).
 export function findReferences(text) {
   const found = new Set();
-  for (const match of text.matchAll(/(?:`|\]\()((?:references|templates)\/[\w./-]+)(?:`|\))/g)) {
+  for (const match of text.matchAll(/(?:`|\]\()((?:references|templates)\/[\w./-]+)(?:#[\w-]*)?(?:`|\))/g)) {
     found.add(match[1]);
   }
   return [...found];
+}
+
+// Reference files that no chain of references starting at SKILL.md reaches. An agent following the
+// skill would never load them. `files` maps skill-relative paths to their text.
+export function findUnreachable(files) {
+  const reached = new Set(['SKILL.md']);
+  const queue = ['SKILL.md'];
+  while (queue.length) {
+    const text = files.get(queue.shift()) ?? '';
+    for (const reference of findReferences(text)) {
+      if (!reached.has(reference)) {
+        reached.add(reference);
+        queue.push(reference);
+      }
+    }
+  }
+  return [...files.keys()].filter((path) => path.startsWith('references/') && !reached.has(path)).sort();
 }
 
 export function findForbiddenPaths(trackedPaths) {
@@ -114,10 +131,15 @@ async function main() {
         for (const file of await readdir(subDir)) if (file.endsWith('.md')) markdown.push(join(subDir, file));
       }
     }
-    for (const file of markdown) {
-      for (const reference of findReferences(await readFile(file, 'utf8'))) {
+    const texts = new Map();
+    for (const file of markdown) texts.set(file.slice(skillDir.length + 1), await readFile(file, 'utf8'));
+    for (const path of findUnreachable(texts)) {
+      problems.push(`skills/${entry.name}/${path} is not reachable from SKILL.md`);
+    }
+    for (const [path, text] of texts) {
+      for (const reference of findReferences(text)) {
         if (!(await exists(join(skillDir, reference)))) {
-          problems.push(`${file.slice(root.length + 1)} references missing file ${reference}`);
+          problems.push(`skills/${entry.name}/${path} references missing file ${reference}`);
         }
       }
     }

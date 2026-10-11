@@ -1,10 +1,10 @@
 # job-hunt
 
-An agent skill for a focused, private job search with Claude Code or Codex. It interviews you about what you want, keeps that in private files, and (in later versions) evaluates companies, searches for matching openings and finds people worth contacting.
+An agent skill for a focused, private job search with Claude Code or Codex. It interviews you about what you want, keeps that in private files, evaluates companies, searches for matching openings and finds people worth contacting.
 
 It never acts for you: it does not apply to jobs, fill forms, send messages or connection requests, sign in to websites, or edit your resume.
 
-> **Status: 0.1, in development.** Interview and status work. `eval` (0.2), `search` (0.3) and `connect` (0.4) are not available yet. The skill is marked internal until 1.0, so installing it requires `INSTALL_INTERNAL_SKILLS=1`. See [docs/SPEC.md](docs/SPEC.md) for the full design.
+> **Status: 0.4, in development.** All commands are implemented. Version 1.0 follows once the acceptance checks in [docs/SPEC.md](docs/SPEC.md) pass in both Claude Code and Codex. The skill is marked internal until then, so installing it requires `INSTALL_INTERNAL_SKILLS=1`.
 
 ## Install
 
@@ -22,8 +22,11 @@ Run it from the root of a Git project where you want to keep your private job-se
 | --- | --- | --- |
 | `/job-hunt` | `$job-hunt` | Status of your files, and the next step |
 | `/job-hunt interview` | `$job-hunt interview` | Review all your directive files with you |
+| `/job-hunt eval {company}` | `$job-hunt eval {company}` | Evaluate a company against your files and add or update it in your ledger |
+| `/job-hunt search` | `$job-hunt search` | Search your ledger companies and the web for matching openings, and write a report |
+| `/job-hunt connect {company}` | `$job-hunt connect {company}` | Find recruiters and hiring managers at a company from public search results |
 
-The first run interviews you for anything missing.
+The first run interviews you for anything missing. The skill reads only public pages: it never signs in to any site and never automates LinkedIn.
 
 ### Codex web access
 
@@ -51,6 +54,9 @@ Companies on your blacklist are never searched for and never named in any query 
 | `IDEAL_BENEFITS.md` | Compensation and benefits, including your minimum |
 | `RED_FLAGS.md` | Dealbreakers, warning signs, review-score thresholds |
 | `BLACKLIST.md` | Companies never to search against |
+| `CONNECTIONS.md` | People you might contact; the `Status` column is yours |
+| `evals/` | One report per company evaluation |
+| `search/` | Dated search reports, and `seen.csv` so a posting is reported again only when it changes |
 
 ## Development
 

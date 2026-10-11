@@ -1,6 +1,25 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseFrontmatter, checkFrontmatter, findReferences, findForbiddenPaths, findDenylisted } from '../scripts/check-skill.mjs';
+import { parseFrontmatter, checkFrontmatter, findReferences, findForbiddenPaths, findDenylisted, findUnreachable } from '../scripts/check-skill.mjs';
+
+test('reference files not reachable from SKILL.md are reported, following references transitively', () => {
+  const files = new Map([
+    ['SKILL.md', 'Run `references/eval.md`.'],
+    ['references/eval.md', 'Rate with `references/rubric.md` and `templates/EVAL.md`.'],
+    ['references/rubric.md', 'No further references.'],
+    ['references/orphan.md', 'Points to `references/eval.md` but nothing points here.'],
+  ]);
+  assert.deepEqual(findUnreachable(files), ['references/orphan.md']);
+});
+
+test('a reference cycle does not loop and everything reachable passes', () => {
+  const files = new Map([
+    ['SKILL.md', '`references/a.md`'],
+    ['references/a.md', '`references/b.md`'],
+    ['references/b.md', '`references/a.md`'],
+  ]);
+  assert.deepEqual(findUnreachable(files), []);
+});
 
 test('frontmatter fields are parsed, including a nested metadata block', () => {
   const fm = parseFrontmatter('---\nname: job-hunt\ndescription: Find jobs.\nmetadata:\n  internal: true\n---\n# Body\n');
@@ -52,4 +71,19 @@ test('deny-listed values are found case-insensitively and reported without the v
     'README.md:2 contains deny-listed value #1',
     'docs/SPEC.md:1 contains deny-listed value #2',
   ]);
+});
+
+test('references with an anchor are found without the anchor', () => {
+  assert.deepEqual(findReferences('See `references/search.md#4-open` and [rules](references/rubric.md#posting).'), [
+    'references/search.md',
+    'references/rubric.md',
+  ]);
+});
+
+test('templates are never reported as unreachable, only reference files', () => {
+  const files = new Map([
+    ['SKILL.md', 'Nothing referenced.'],
+    ['templates/EVAL.md', 'An unused template.'],
+  ]);
+  assert.deepEqual(findUnreachable(files), []);
 });
