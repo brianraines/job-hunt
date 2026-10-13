@@ -98,6 +98,7 @@ These are not directive files and are never part of the completeness check.
 | `evals/{company-slug}-{yyyyMMdd-HHmmss}.md` | `templates/EVAL.md` | `eval` |
 | `search/{yyyy-mm-dd}/SEARCH-{yyyyMMdd-HHmmss}.md` | `templates/SEARCH.md` | `search` |
 | `search/seen.csv` | `templates/seen.csv` | `search` |
+| `search/sources.csv` | `templates/sources.csv` | `search`; ledger of boards and discovery sites with how each was read, yield and status; the `notes` column belongs to the operator |
 | `SCORING.md` | `templates/SCORING.md` | `score companies` and `score jobs` (see `references/score.md`) |
 | `scores/COMPANIES-{yyyyMMdd-HHmmss}.md` | none | `score companies` |
 | `scores/JOBS-{yyyyMMdd-HHmmss}.md` | none | `score jobs` |

@@ -4,6 +4,13 @@ Directive files: PROFILE.md (reviewed YYYY-MM-DD), IDEAL_ROLES.md (...), IDEAL_C
 Sources: {n} ledger boards ({n} re-verified), {n} web searches. Postings opened: {n} of {n} matching titles (cap 300; {n} skipped by the cap).
 Opportunities: {n} (Strong {n}, Possible {n}, Stretch {n}). Excluded: {n}. Blacklisted companies dropped: {n}. Previously reported: {n}.
 
+## Source mix
+
+| Board type | Boards read | Boards not checked | Postings opened | Strong | Possible | Stretch |
+| --- | --- | --- | --- | --- | --- | --- |
+
+<!-- One row per board type: Greenhouse, Ashby, Lever, Workday, browser-rendered careers page, other. If more than 75% of opportunities come from one board type, say so here and name the unchecked boards that could change it. -->
+
 ## 1. {Title} — {Company}
 
 - Posting: {URL opened in this run}

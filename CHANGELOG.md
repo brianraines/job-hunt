@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.0 — unreleased
+
+- `search` reads Workday boards through Workday's public listing endpoint (`POST /wday/cxs/{tenant}/{site}/jobs`) and one-posting endpoint, built only from a board URL the agent opened.
+- Browser fallback for careers pages that list jobs only through JavaScript (including Eightfold and Phenom sites): a fresh signed-out browser, the site's own job-search box only, the page's data requests read at a human pace, retry on 429 and stop on 403, a block page or a sign-in prompt.
+- Web search mixes tracking-system hosts, with at least one Workday-host query and one unrestricted query per run. The cap orders postings within the new and seen groups by how directly their listed location fits the operator's location must-haves.
+- The search report has a **Source mix** table by board type and warns when more than 75% of opportunities come from one board type.
+- New `search/sources.csv` ledger (template `sources.csv`) of boards and discovery sites with how each was read, yield and status (`productive`, `read`, `empty`, `blocked`, `dead`, `lead-only`, `superseded`); later runs read its lead boards and skip recently dead or empty ones.
+
 ## 0.5.0 — unreleased
 
 - `score companies` and `score jobs`: review a weight matrix with the operator (one row per company, or role and benefits, Must-have and Nice-to-have; weights sum to 100; first proposal 70/30), then rank ledger companies from their latest evals or the latest search's opportunities from their scorecards. Reports go to `scores/`; `score companies` also updates the ledger's `Last eval`. No web access needed.
