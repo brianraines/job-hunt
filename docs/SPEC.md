@@ -82,6 +82,7 @@ Each release passes the acceptance checks for its scope and updates `CHANGELOG.m
 | `evals/{company-slug}-{yyyyMMdd-HHmmss}.md` | Markdown | `eval` |
 | `search/{yyyy-mm-dd}/SEARCH-{yyyyMMdd-HHmmss}.md` | Markdown | `search` |
 | `search/seen.csv` | CSV | `search` |
+| `search/sources.csv` | CSV | `search`; `notes` column by the operator |
 | `SCORING.md` | Markdown | `score companies`, `score jobs` |
 | `scores/COMPANIES-{yyyyMMdd-HHmmss}.md`, `scores/JOBS-{yyyyMMdd-HHmmss}.md` | Markdown | `score companies`, `score jobs` |
 
@@ -212,8 +213,9 @@ Goal: complete every directive file without asking for facts the operator's sour
 
 Sources:
 
-1. Every `active` ledger company's board. Prefer a tracking system's documented public listing endpoint (for example Greenhouse, Lever or Ashby) over scraping HTML. When `Last verified` or `Reviews checked` is more than 90 days old, re-verify the board and refresh the reviews during the run and update the ledger.
-2. General web search with the keywords from `IDEAL_ROLES.md`.
+1. Every `active` ledger company's board. Prefer a tracking system's documented public listing endpoint (for example Greenhouse, Lever, Ashby or Workday) over scraping HTML. A careers page that lists jobs only through JavaScript is rendered in a signed-out browser, if the agent has one. When `Last verified` or `Reviews checked` is more than 90 days old, re-verify the board and refresh the reviews during the run and update the ledger.
+2. Lead boards: employer boards outside the ledger recorded in `search/sources.csv` by earlier runs. Search never adds them to the ledger.
+3. General web search with the keywords from `IDEAL_ROLES.md`, varied across tracking-system hosts (including Workday) and with unrestricted queries.
 
 Rules:
 
@@ -234,6 +236,8 @@ Rules:
 - Cross-reference `CONNECTIONS.md` and name known contacts at each company.
 - `search/seen.csv` columns: `url,company,title,first_seen,last_seen,last_rating`. A posting already seen is reported again only if its rating or title changed; otherwise it counts as previously reported.
 - Record every query and source used, with result counts, including those that returned nothing.
+- The report includes a source mix by board type (boards read, boards not checked, postings opened, opportunities by rating) and warns when more than 75% of opportunities come from one board type.
+- `search/sources.csv` columns: `url,kind,board_type,company,first_seen,last_checked,read_method,last_listed,last_matching,last_opened,last_opportunities,opportunities_total,status,notes`. One row per board or discovery site, so later runs reuse productive boards and skip recently dead or empty ones. No blacklisted company name is written in it; a row whose company is blacklisted has its `company` column blanked and status `blocked`.
 - Report salary only as posted. Cite only facts from the operator's resume sources; never claim unlisted experience.
 - Each reported opportunity carries a scorecard: every Must-have and Nice-to-have from `IDEAL_ROLES.md` and `IDEAL_BENEFITS.md` marked met, unmet or unknown. When the write-ups are finished, each opportunity is scored from its scorecard with the job matrix (see Scoring).
 - Order opportunities by rating, then by score within each rating. The report shows the last-reviewed date of each directive file.
@@ -246,6 +250,13 @@ Report format:
 Directive files: PROFILE.md (reviewed 2026-10-10), IDEAL_ROLES.md (...), ...
 Sources: 23 ledger boards (2 re-verified), 6 web searches. Postings opened: 140 of 152 matching titles (cap 300).
 Opportunities: 9. Excluded: 4. Blacklisted companies dropped: 1. Previously reported: 3.
+
+## Source mix
+
+| Board type | Boards read | Boards not checked | Postings opened | Strong | Possible | Stretch |
+| --- | --- | --- | --- | --- | --- | --- |
+| Greenhouse | 12 | 0 | 80 | 2 | 3 | 1 |
+| Workday | 4 | 1 | 35 | 1 | 1 | 0 |
 
 ## 1. Principal Engineer, Platform — Example Co
 
@@ -318,7 +329,7 @@ Settled while implementing 0.2 to 0.4, October 11, 2026, including fixes from an
 - **Search order.** Ratings are final after the news check, and only then compared with `seen.csv`, so a second run with unchanged postings reports nothing new. Postings that match no rating are not listed but are recorded in `seen.csv`.
 - **Posting URLs and the fetch cap.** A posting's record from a tracking system's public endpoint counts as opening it, and the report links the posting URL that record gives. The only URLs the skill builds are the public listing endpoints with a probed slug, and the same API's one-posting endpoint with an `id` its listing returned. Each posting assessed counts once toward the cap of 300, and postings not yet in `seen.csv` are opened first.
 - **Aggregator results in search** (LinkedIn, Indeed, Built In and similar) are leads only. The employer's own copy is found and opened; when it cannot be found, the lead is listed under "Sources not checked". linkedin.com pages are never fetched.
-- **Boards without a public listing endpoint** (Workday, iCIMS and others) are read from the careers page; when it lists jobs only through JavaScript the agent cannot run, the board is listed under "Sources not checked". A stale board that cannot be re-verified keeps its old date and is listed there too. Search refreshes only `Last verified`, the review columns and `Reviews checked`; a moved board is not read in that run; it is listed under "Sources not checked" with an `eval` suggestion.
+- **Boards without a public listing endpoint** (iCIMS, Eightfold, Phenom and others) are read from the careers page. Workday boards use Workday's public listing endpoint, built only from a board URL the agent opened. When a careers page lists jobs only through JavaScript, the agent renders it in a fresh signed-out browser, uses only the site's job-search box, and reads the page's own data requests at a human pace; a sign-in, terms or CAPTCHA prompt, an HTTP 403 or a block page stops that site for the run, and without a browser the board is listed under "Sources not checked". A stale board that cannot be re-verified keeps its old date and is listed there too. Search refreshes only `Last verified`, the review columns and `Reviews checked`; a moved board is not read in that run; it is listed under "Sources not checked" with an `eval` suggestion.
 - **Blacklist names.** Matching ignores case, punctuation and legal suffixes, and treats other names given in an entry's Reason ("also known as …") as the same company. A known brand or subsidiary of a blacklisted company is treated as blacklisted; `eval`, `connect` and the interview tell the operator, and `search` drops it without stopping and lists it only in the chat summary. The interview asks for other names when adding an entry. The report's "Blacklisted companies dropped" counts distinct companies.
 - **Connect** reads names and titles from search-result titles and snippets, never from opened LinkedIn pages; a company's own public pages may be opened. People whose result names the company and a matching role are recorded, as `confirmed` when the result shows the role is current and `unverified` otherwise; people shown to have left are skipped.
 
@@ -351,7 +362,7 @@ The acceptance checks below are run manually in both agents before each release.
 5. Rerunning `/job-hunt interview` summarizes existing content, writes only after approval and leaves `.history/` copies.
 6. Proposed companies have eval reports and are added only when kept; blacklist entries are added only after explicit approval.
 7. `eval` on a new company writes a report and adds a Strong or Possible fit to the ledger; on a listed company updates its row and proposes `paused` for Not a fit; on a blacklisted company refuses without any outgoing query.
-8. `search` writes a report at the dated path; every opportunity link opens to an open posting; ratings follow the rubric; blacklisted names appear in no outgoing query and only as a count in the report; stale ledger rows are re-verified; `seen.csv` is updated and a second run skips unchanged postings; blocked sources are listed with links.
+8. `search` writes a report at the dated path; every opportunity link opens to an open posting; ratings follow the rubric; blacklisted names appear in no outgoing query and only as a count in the report; stale ledger rows are re-verified; `seen.csv` is updated and a second run skips unchanged postings; blocked sources are listed with links; the report has a source mix by board type, and `search/sources.csv` records each board read or attempted.
 9. `connect` adds at most 10 people with only the listed fields, skips duplicates, never changes an existing status, and refuses blacklisted companies.
 10. Without live web access, `eval`, `search` and `connect` stop with an explanation; in Codex the explanation includes the launch command.
 11. After any run, `git status` shows nothing under `docs/job_hunt/`.
